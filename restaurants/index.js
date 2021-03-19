@@ -1,5 +1,5 @@
 const express = require('express');
-const { db, storage,admin } = require('../configs/firebase')
+const { firestore, storage,admin } = require('../configs/firebase')
 
 const FieldVaule = admin.firestore.FieldValue
 const router = express.Router()
@@ -32,8 +32,7 @@ router.post('/restaurants', async (req, res) => {
                 updated_at:FieldVaule.serverTimestamp()
             }
             const data = Object.assign(req.body,time)
-            console.log(data)
-            await db.collection('restaurants').add(data)
+            await firestore.collection('restaurants').add(data)
             res.status(200).send({
                 code: 200,
                 success: true,
@@ -50,7 +49,7 @@ router.post('/restaurants', async (req, res) => {
 
 router.get('/restaurants',async (req, res) => {
     try {
-      const docRef = await db.collection('restaurants').get()
+      const docRef = await firestore.collection('restaurants').get()
       let result =[]
       docRef.docs.map((data)=>{
          result.push(data.data())
