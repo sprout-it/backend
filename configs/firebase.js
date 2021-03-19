@@ -1,9 +1,11 @@
 const admin = require('firebase-admin')
-const serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = require('./serviceAccountKey.json')
+
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://sprout-9526a-default-rtdb.firebaseio.com"
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://sprout-app.firebaseio.com',
+  storageBucket: "gs://sprout-app-925ce.appspot.com",
 });
 
 exports.admin = admin
