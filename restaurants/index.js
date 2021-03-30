@@ -1,5 +1,5 @@
 const express = require('express');
-const { firestore, storage,admin } = require('../configs/firebase')
+const { firestore, storage, admin } = require('../configs/firebase')
 
 const FieldVaule = admin.firestore.FieldValue
 const router = express.Router()
@@ -26,12 +26,12 @@ router.post('/restaurants', async (req, res) => {
             res.status(405).json(err);
         });
 
-        blobStream.on('finish',async () => {
+        blobStream.on('finish', async () => {
             const time = {
-                created_at:FieldVaule.serverTimestamp(),
-                updated_at:FieldVaule.serverTimestamp()
+                created_at: FieldVaule.serverTimestamp(),
+                updated_at: FieldVaule.serverTimestamp()
             }
-            const data = Object.assign(req.body,time)
+            const data = Object.assign(req.body, time)
             await firestore.collection('restaurants').add(data)
             res.status(200).send({
                 code: 200,
@@ -47,17 +47,18 @@ router.post('/restaurants', async (req, res) => {
     }
 });
 
-router.get('/restaurants',async (req, res) => {
+router.get('/restaurants', async (req, res) => {
     try {
-      const docRef = await firestore.collection('restaurants').get()
-      let result =[]
-      docRef.docs.map((data)=>{
-         result.push(data.data())
-      })
-      res.send({code:200,success: true, data:result});
+        const docRef = await firestore.collection('restaurants').get()
+        let result = []
+        docRef.docs.map((data) => {
+            result.push(data.data())
+        })
+        res.send({ code: 200, success: true, data: result });
     } catch (error) {
         console.error(error)
         res.sendStatus(400);
     }
 });
+
 module.exports = router
