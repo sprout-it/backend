@@ -51,10 +51,17 @@ router.get('/restaurants', async (req, res) => {
     try {
         const docRef = await firestore.collection('restaurants').get()
         let result = []
-        docRef.docs.map((data) => {
-            result.push(data.data())
-        })
-        res.send({ code: 200, success: true, data: result });
+        await Promise.all(docRef.docs.map(async (data) => {
+            const folder = 'restaurants'
+            const file = bucket.file(`${folder}/${data.data().name}/${data.data().name}.jpg`);
+            const [recieptPictureUrl] = await file.getSignedUrl({ action: "read", expires: Date.now() + 60 * 60 * 10 })
+            const restaurants = {
+                imgUrl:recieptPictureUrl
+            }
+            Object.assign(restaurants,data.data())
+            result.push(restaurants)
+        }))
+        res.send(result);
     } catch (error) {
         console.error(error)
         res.sendStatus(400);
