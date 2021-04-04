@@ -1,5 +1,5 @@
 const express = require('express');
-// const functions = require('firebase-functions')
+const functions = require('firebase-functions')
 const app = express();
 const cors = require('cors')
 const PORT = process.env.PORT || 80
@@ -14,4 +14,4 @@ app.use(restaurants)
 
 app.listen(PORT, () => console.log(`Server is Running on ${PORT}`))
 
-// exports.api = functions.https.onRequest(app)
+exports.api = functions.https.onRequest(app)

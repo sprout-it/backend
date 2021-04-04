@@ -3,8 +3,8 @@ const serviceAccount = require('./serviceAccountKey.json')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://sprout-app.firebaseio.com',
-  storageBucket: "gs://sprout-app-925ce.appspot.com",
+  databaseURL: "https://sprout-9526a-default-rtdb.firebaseio.com",
+  storageBucket: "gs://sprout-9526a.appspot.com",
 });
 
 exports.admin = admin

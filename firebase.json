@@ -1,0 +1,12 @@
+{
+    "functions": {
+        "source": ".",
+        "ignore": [
+            "firebase.json",
+            "firbease-debug.log",
+            "node_modules",
+            "readme.md"
+        ],
+        "runtime": "nodejs12"
+    }
+}
