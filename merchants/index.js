@@ -55,13 +55,60 @@ router.get('/restaurants', async (req, res) => {
             const folder = 'restaurants'
             const file = bucket.file(`${folder}/${data.data().name}/${data.data().name}.jpg`);
             const [recieptPictureUrl] = await file.getSignedUrl({ action: "read", expires: Date.now() + 60 * 60 * 10 })
+
             const restaurants = {
-                imgUrl:recieptPictureUrl
+                imgUrl: recieptPictureUrl
             }
-            Object.assign(restaurants,data.data())
+
+            Object.assign(restaurants, {
+                ...data.data(), key: data.id
+            })
+
             result.push(restaurants)
         }))
         res.send(result);
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(400);
+    }
+});
+
+router.get('/restaurant/menu/:key', async (req, res) => {
+    const { key } = req.params
+    try {
+        const restaurant = await firestore.doc(`restaurants/${key}`).get()
+        const getMenu = {
+            key,
+            ...restaurant.data(),
+            menu: (await restaurant.data().menu.get()).data()
+        }
+        res.send(getMenu);
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(400);
+    }
+});
+
+router.get('/restaurant/:key', async (req, res) => {
+    const { key } = req.params
+    try {
+        const docRef = await firestore.doc(`restaurants/${key}`).get()
+        res.send({
+            key,
+            ...docRef.data()
+        });
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(400);
+    }
+});
+
+router.get('/resSize', async (req, res) => {
+    try {
+        const { size } = await firestore.collection(`restaurants`).get()
+        res.send({
+            size
+        });
     } catch (error) {
         console.error(error)
         res.sendStatus(400);
